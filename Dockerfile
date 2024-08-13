@@ -22,6 +22,12 @@ COPY . /var/www/html
 
 WORKDIR /var/www/html
 
+RUN composer install
+
+RUN php artisan migrate
+
+RUN vendor/bin/phpunit --configuration /var/www/html/phpunit.xml
+
 EXPOSE 9091
 
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "php /var/www/html/artisan queue:work --sleep=3 --tries=3 & apache2-foreground"]
