@@ -21,6 +21,13 @@ class CarController extends Controller
     {                                
         $data = $request->json()->all();
         
+        // Check if the data is empty or not an array
+        if (empty($data) || !is_array($data)) {
+            return response()->json([
+                'error' => 'Invalid data format: The data should be a non-empty array'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         // Validate the incoming request data
         $validator = \Validator::make($data, [
             '*.id'      => 'required|integer|distinct',
