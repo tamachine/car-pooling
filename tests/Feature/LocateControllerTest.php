@@ -78,4 +78,10 @@ class LocateControllerTest extends TestCase
         // Assert that the response status is 404 Not Found
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
+
+    #[Test]
+    public function rejects_invalid_content_type_cars_request() 
+    {
+        return $this->assertInvalidContentTypeRejected();
+    }
 }

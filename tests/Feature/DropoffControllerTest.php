@@ -71,4 +71,10 @@ class DropoffControllerTest extends TestCase
             'journey_id' => 9999,
         ]);
     }
+
+    #[Test]
+    public function rejects_invalid_content_type_cars_request() 
+    {
+        return $this->assertInvalidContentTypeRejected();
+    }
 }

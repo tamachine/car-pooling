@@ -65,4 +65,10 @@ class JourneyControllerTest extends TestCase
         // Assert that the response status is 400 Bad Request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
     }
+
+    #[Test]
+    public function rejects_invalid_content_type_cars_request() 
+    {
+        return $this->assertInvalidContentTypeRejected();
+    }
 }

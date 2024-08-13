@@ -102,5 +102,11 @@ class CarControllerTest extends TestCase
         $response->assertJson([
             'error' => 'Invalid data format: The data should be a non-empty array'
         ]);
+    }   
+    
+    #[Test]
+    public function rejects_invalid_content_type_cars_request() 
+    {
+        return $this->assertInvalidContentTypeRejected();
     }
 }

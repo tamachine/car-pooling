@@ -17,6 +17,12 @@ class DropoffController extends Controller
      */
     public function store(Request $request)
     {
+         // Call the verifyContentType method and return if there's an error
+         $response = $this->verifyContentType($request);
+         if ($response) {
+             return $response;
+         }
+         
         // Retrieve and decode the incoming JSON data from the request
         $data = $request->json()->all();
 
