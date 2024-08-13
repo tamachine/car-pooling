@@ -22,7 +22,8 @@ COPY . /var/www/html
 
 WORKDIR /var/www/html
 
-RUN touch /var/www/html/database/database.sqlite
+RUN touch /var/www/html/database/database.sqlite \
+    && chmod 666 /var/www/html/database/database.sqlite
 
 RUN composer install
 
