@@ -17,6 +17,10 @@ build_image:
   script:
     - echo "Building docker image..."
     - docker build . -t ${CI_REGISTRY_IMAGE}:latest
+    - echo "Logging in to Docker registry..."
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo "Pushing docker image to registry..."
+    - docker push ${CI_REGISTRY_IMAGE}:latest
 
 run_container:
   stage: docker
@@ -29,7 +33,9 @@ run_container:
     - docker:dind
   script:
     - echo "Logging in to Docker registry..."
-    - echo ${CI_JOB_TOKEN} | docker login --username ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo "Pulling docker image..."
+    - docker pull ${CI_REGISTRY_IMAGE}:latest
     - echo "Executing container..."
     - docker run -d -p 9091:9091 --name car-pooling-candidate-DjhM2EyYjN ${CI_REGISTRY_IMAGE}:latest
     - echo "Container ready"
