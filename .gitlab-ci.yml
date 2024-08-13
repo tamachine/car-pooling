@@ -39,7 +39,7 @@ run_container:
     - echo "Executing container..."
     - docker run -d -p 9091:9091 --name car-pooling-candidate-DjhM2EyYjN ${CI_REGISTRY_IMAGE}:latest
     - echo "Container ready"
-    - sleep 10 # wait 10 seconds for the container to be ready
+    - sleep 30 # wait 30 seconds for the container to be ready
 
 setup_and_start:
   stage: setup
@@ -51,6 +51,8 @@ setup_and_start:
   services:
     - docker:dind
   script:
+    - echo "Checking running containers..."
+    - docker ps
     - echo "Installing dependencies..."
     - docker exec car-pooling-candidate-DjhM2EyYjN composer install
     - echo "Migrating..."
