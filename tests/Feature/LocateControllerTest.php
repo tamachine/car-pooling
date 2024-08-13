@@ -22,7 +22,7 @@ class LocateControllerTest extends TestCase
         $journey = Journey::factory()->create(['car_id' => $car->id]);
 
         // Make a request to the locate endpoint
-        $response = $this->postJson('/api/locate', ['ID' => $journey->id]);
+        $response = $this->postJson('/locate', ['ID' => $journey->id]);
 
         // Assert that the response status is 200 OK
         $response->assertStatus(Response::HTTP_OK);
@@ -39,7 +39,7 @@ class LocateControllerTest extends TestCase
         $journey = Journey::factory()->create(['car_id' => null]);
 
         // Make a request to the locate endpoint
-        $response = $this->postJson('/api/locate', ['ID' => $journey->id]);
+        $response = $this->postJson('/locate', ['ID' => $journey->id]);
 
         // Assert that the response status is 204 No Content
         $response->assertStatus(Response::HTTP_NO_CONTENT);
@@ -49,7 +49,7 @@ class LocateControllerTest extends TestCase
     public function locate_with_invalid_data()
     {
         // Make a request to the locate endpoint with invalid data
-        $response = $this->postJson('/api/locate', ['ID' => 'invalid']);
+        $response = $this->postJson('/locate', ['ID' => 'invalid']);
 
         // Assert that the response status is 400 Bad Request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
@@ -59,7 +59,7 @@ class LocateControllerTest extends TestCase
     public function locate_non_existing_journey()
     {
         // Make a request to the locate endpoint with a non-existing journey ID
-        $response = $this->postJson('/api/locate', ['ID' => 999]);
+        $response = $this->postJson('/locate', ['ID' => 999]);
 
         // Assert that the response status is 404 Not Found
         $response->assertStatus(Response::HTTP_NOT_FOUND);
@@ -73,7 +73,7 @@ class LocateControllerTest extends TestCase
         Dropoff::factory()->create(['journey_id' => $journey->id]);
 
         // Make a request to the locate endpoint
-        $response = $this->postJson('/api/locate', ['ID' => $journey->id]);
+        $response = $this->postJson('/locate', ['ID' => $journey->id]);
 
         // Assert that the response status is 404 Not Found
         $response->assertStatus(Response::HTTP_NOT_FOUND);

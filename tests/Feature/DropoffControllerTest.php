@@ -20,7 +20,7 @@ class DropoffControllerTest extends TestCase
         $journey = Journey::factory()->create();
 
         // Send a POST request to the store method
-        $response = $this->json('POST', '/api/dropoff', [
+        $response = $this->json('POST', '/dropoff', [
             'ID' => $journey->id,
         ]);
 
@@ -42,7 +42,7 @@ class DropoffControllerTest extends TestCase
     public function store_validation_error()
     {
         // Send a POST request to the store method with invalid data
-        $response = $this->json('POST', '/api/dropoff', [
+        $response = $this->json('POST', '/dropoff', [
             'ID' => 'invalid_id',
         ]);
 
@@ -59,7 +59,7 @@ class DropoffControllerTest extends TestCase
     public function store_journey_not_found()
     {
         // Send a POST request to the store method with a non-existent journey ID
-        $response = $this->json('POST', '/api/dropoff', [
+        $response = $this->json('POST', '/dropoff', [
             'ID' => 9999, // Assuming this ID does not exist
         ]);
 

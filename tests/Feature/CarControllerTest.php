@@ -23,8 +23,8 @@ class CarControllerTest extends TestCase
             ['id' => 2, 'seats' => 6],
         ];
 
-        // Simulate the PUT request to the /api/cars endpoint
-        $response = $this->putJson('/api/cars', $data);
+        // Simulate the PUT request to the /cars endpoint
+        $response = $this->putJson('/cars', $data);
 
         // Assert that the response status is 200 OK
         $response->assertStatus(Response::HTTP_OK);
@@ -43,8 +43,8 @@ class CarControllerTest extends TestCase
             ['id' => 2], // Missing 'seats'
         ];
 
-        // Simulate the PUT request to the /api/cars endpoint
-        $response = $this->putJson('/api/cars', $data);
+        // Simulate the PUT request to the /cars endpoint
+        $response = $this->putJson('/cars', $data);
 
         // Assert that the response status is 400 Bad Request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
@@ -63,8 +63,8 @@ class CarControllerTest extends TestCase
             ['id' => 2, 'seats' => 6],
         ];
 
-        // Simulate the PUT request to the /api/cars endpoint
-        $response = $this->putJson('/api/cars', $data);
+        // Simulate the PUT request to the /cars endpoint
+        $response = $this->putJson('/cars', $data);
 
         // Assert that the response status is 200 OK
         $response->assertStatus(Response::HTTP_OK);

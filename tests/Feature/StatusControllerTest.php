@@ -15,7 +15,7 @@ class StatusControllerTest extends TestCase
     public function status_endpoint()
     {
         // Make a GET request to the status endpoint
-        $response = $this->getJson('/api/status');
+        $response = $this->getJson('/status');
 
         // Assert that the response status is 200 OK
         $response->assertStatus(Response::HTTP_OK);

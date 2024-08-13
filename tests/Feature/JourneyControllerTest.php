@@ -24,8 +24,8 @@ class JourneyControllerTest extends TestCase
     #[Test]
     public function store_valid_journey()
     {
-        // Simulate a request to the /api/journey endpoint with valid data
-        $response = $this->postJson('/api/journey', [
+        // Simulate a request to the /journey endpoint with valid data
+        $response = $this->postJson('/journey', [
             'id' => 1,
             'people' => 4,
         ]);
@@ -46,8 +46,8 @@ class JourneyControllerTest extends TestCase
             'people' => 4,
         ]);
 
-        // Simulate a request to the /api/journey endpoint with the same ID
-        $response = $this->postJson('/api/journey', [
+        // Simulate a request to the /journey endpoint with the same ID
+        $response = $this->postJson('/journey', [
             'id' => 1,
             'people' => 4,
         ]);
@@ -59,8 +59,8 @@ class JourneyControllerTest extends TestCase
     #[Test]
     public function store_journey_with_invalid_data()
     {
-        // Simulate a request to the /api/journey endpoint with invalid data
-        $response = $this->postJson('/api/journey', []);
+        // Simulate a request to the /journey endpoint with invalid data
+        $response = $this->postJson('/journey', []);
 
         // Assert that the response status is 400 Bad Request
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
