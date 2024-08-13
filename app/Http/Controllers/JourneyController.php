@@ -55,9 +55,7 @@ class JourneyController extends Controller
 
         });       
 
-        // Return a 200 OK response indicating the journey was registered successfully
-        return response()->json([
-            'message' => 'Journey registered correctly'
-        ], Response::HTTP_OK);
+        // Return a 200 OK response 
+        return response()->json(null, Response::HTTP_OK);
     }
 }
