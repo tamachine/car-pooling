@@ -28,6 +28,8 @@ RUN php artisan migrate
 
 RUN vendor/bin/phpunit --configuration /var/www/html/phpunit.xml
 
+RUN echo "Listen 9091" >> /etc/apache2/ports.conf
+
 EXPOSE 9091
 
 CMD ["sh", "-c", "php /var/www/html/artisan queue:work --sleep=3 --tries=3 & apache2-foreground"]
