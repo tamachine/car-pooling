@@ -24,7 +24,7 @@ class JourneyController extends Controller
         if ($response) {
             return $response;
         }
-        
+
         // Retrieve and decode the incoming JSON data from the request
         $data = $request->json()->all();
 
@@ -41,7 +41,7 @@ class JourneyController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $id     = $data['id'];        
+        $id = $data['id'];        
         
         // Check if a journey with the same ID already exists in the database
         $existingGroup = Journey::find($id);
@@ -62,6 +62,6 @@ class JourneyController extends Controller
         });       
 
         // Return a 200 OK response 
-        return response()->json(null, Response::HTTP_OK);
+        return response()->json('', Response::HTTP_OK);
     }
 }
