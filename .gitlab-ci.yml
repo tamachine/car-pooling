@@ -1,7 +1,6 @@
 stages:
   - build
-  - docker
-  - setup
+  - docker  
   - test
   - acceptance
 
@@ -16,11 +15,11 @@ build_image:
     - docker:dind
   script:
     - echo "Building docker image..."
-    - docker build . -t ${CI_REGISTRY_IMAGE}:latest
+    - docker build . -t ${DOCKER_IO_REGISTRY_IMAGE}:latest
     - echo "Logging in to Docker registry..."
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo ${DOCKER_IO_REGISTRY_PASSWORD} | docker login -u ${DOCKER_IO_REGISTRY_USER} --password-stdin ${DOCKER_IO_REGISTRY}
     - echo "Pushing docker image to registry..."
-    - docker push ${CI_REGISTRY_IMAGE}:latest
+    - docker push ${DOCKER_IO_REGISTRY_IMAGE}:latest
 
 run_container:
   stage: docker
@@ -33,24 +32,15 @@ run_container:
     - docker:dind
   script:
     - echo "Logging in to Docker registry..."
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo ${DOCKER_IO_REGISTRY_PASSWORD} | docker login -u ${DOCKER_IO_REGISTRY_USER} --password-stdin ${DOCKER_IO_REGISTRY}
     - echo "Pulling docker image..."
-    - docker pull ${CI_REGISTRY_IMAGE}:latest
+    - docker pull ${DOCKER_IO_REGISTRY_IMAGE}:latest
     - echo "Executing container..."
-    - docker run -d -p 9091:9091 --name car-pooling-candidate-DjhM2EyYjN ${CI_REGISTRY_IMAGE}:latest
+    - docker run -d -p 9091:9091 --name car-pooling-candidate-DjhM2EyYjN ${DOCKER_IO_REGISTRY_IMAGE}:latest
     - echo "Container ready"
+    - docker ps
     - sleep 30 # wait 30 seconds for the container to be ready
 
-setup_and_start:
-  stage: setup
-  image: docker:latest
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375/
-  services:
-    - docker:dind
-  script:
     - echo "Checking running containers..."
     - docker ps
     - echo "Installing dependencies..."
@@ -58,19 +48,9 @@ setup_and_start:
     - echo "Migrating..."
     - docker exec car-pooling-candidate-DjhM2EyYjN php artisan migrate
     - echo "Starting the worker..."
-    - docker exec -d car-pooling-candidate-DjhM2EyYjN php /var/www/html/artisan queue:work --sleep=3 --tries=3    
+    - docker exec -d car-pooling-candidate-DjhM2EyYjN php /var/www/html/artisan queue:work --sleep=3 --tries=3 
 
-run_tests:
-  stage: test
-  image: docker:latest
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375/
-  services:
-    - docker:dind
-  script:
-    - echo "Ejecutando pruebas de PHPUnit..."
+    - echo "Executing PHPUnit..."
     - docker exec car-pooling-candidate-DjhM2EyYjN vendor/bin/phpunit --configuration /var/www/html/phpunit.xml
 
 acceptance:
