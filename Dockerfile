@@ -1,12 +1,25 @@
-FROM alpine:latest
+FROM php:8.3-apache
 
-# This Dockerfile is optimized for go binaries, change it as much as necessary
-# for your language of choice.
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libsqlite3-dev \
+    libzip-dev \
+    unzip \
+    git \
+    && docker-php-ext-configure gd \
+    && docker-php-ext-install gd pdo pdo_sqlite zip \
+    && a2enmod rewrite \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk --no-cache add ca-certificates libc6-compat
+COPY ./apache-config/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+COPY . /var/www/html
+
+WORKDIR /var/www/html
 
 EXPOSE 9091
 
-COPY car-pooling-challenge /
-
-ENTRYPOINT [ "/car-pooling-challenge" ]
+CMD ["apache2-foreground"]

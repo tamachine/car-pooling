@@ -218,3 +218,20 @@ following survey:
 - https://forms.gle/EzPeURspTCLG1q9T7
 
 Your participation is really important. Thanks for your contribution!
+
+## Project Overview
+
+This project involves designing and implementing a car pooling service to manage car availability and optimize the use of resources. The system tracks available seats in cars and assigns them to groups of people requesting journeys.
+
+## Design and Performance Considerations
+
+The system is designed to handle a large volume of requests efficiently. Key considerations include:
+
+- **Car Allocation Algorithm**: Implemented a priority-based algorithm to assign cars to waiting groups while considering fairness and group arrival order.
+- **Database Indexing**: Indexes on columns frequently used in queries to improve performance.
+- **SQLite Choice**: SQLite was chosen for its simplicity and ease of setup. It is a self-contained, serverless database engine that is ideal for development and testing environments.
+- **Concurrency Handling**: Concurrency issues are managed using transactions to ensure data integrity. Additionally, limiting result sets in queries helps in reducing contention and improves performance.
+- **Efficiency Design**: The system is designed to be efficient even with large numbers of cars and journeys by optimizing queries, indexing critical columns, and carefully handling database operations to ensure responsiveness and scalability.
+- **Queue and Worker Usage**: Implemented a queue with workers to handle asynchronous tasks efficiently. This approach helps in managing tasks such as car assignment and journey processing without blocking the main application flow.
+- **Periodic Release**: Tasks are released and processed every 30 seconds to ensure timely updates and resource management. This periodic processing helps in balancing the load and ensures that the system remains responsive.
+- **Expiration of Data**: Items are set to expire after 20 minutes to ensure that stale or outdated data does not persist in the system. This mechanism helps in maintaining data accuracy and preventing unnecessary load on the database.
