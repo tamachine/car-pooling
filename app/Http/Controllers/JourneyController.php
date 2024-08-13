@@ -62,6 +62,6 @@ class JourneyController extends Controller
         });       
 
         // Return a 200 OK response 
-        return response()->json('', Response::HTTP_OK);
+        return response()->json(null, Response::HTTP_OK);
     }
 }
