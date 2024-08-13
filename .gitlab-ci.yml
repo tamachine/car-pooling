@@ -29,4 +29,12 @@ acceptance:
     - name: ${DOCKER_IO_REGISTRY_IMAGE}:latest
       alias: pooling
   script:
+    # Check running containers
+    - echo "Checking running containers..."
+    - docker ps
+    
+    # Inspect the logs of the container
+    - echo "Inspecting logs of the container..."
+    - docker logs $(docker ps -q --filter "name=pooling")
+
     - /harness --address http://pooling:9091 acceptance
