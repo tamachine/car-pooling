@@ -24,50 +24,47 @@ class LocateController extends Controller
             return $response;
         }
          
-       // Retrieve and decode the incoming JSON data from the request
-       $data = $request->all();
+        // Retrieve and decode the incoming JSON data from the request
+        $data = $request->all();
 
-       // Validate the request data to ensure 'ID' is present and is an integer
-       $validator = \Validator::make($data, [
+        // Validate the request data to ensure 'ID' is present and is an integer
+        $validator = \Validator::make($data, [
            'ID' => 'required|integer',
-       ]);
+        ]);
 
-       // If validation fails, return a 400 Bad Request response with an error message
-       if ($validator->fails()) return response()->noContent(Response::HTTP_BAD_REQUEST); 
+        // If validation fails, return a 400 Bad Request response with an error message
+        if ($validator->fails()) return response()->noContent(Response::HTTP_BAD_REQUEST); 
 
-       // Retrieve the journey ID from the validated data
-       $journeyId = $data['ID'];
+        // Retrieve the journey ID from the validated data
+        $journeyId = $data['ID'];
 
-       // Attempt to find the Journey record with the provided ID
-       $journey = Journey::find($journeyId);
+        // Attempt to find the Journey record with the provided ID
+        $journey = Journey::find($journeyId);
 
-       // If the Journey record is not found, return a 404 Not Found response
-       if (!$journey) return response()->noContent(Response::HTTP_NOT_FOUND);     
+        // If the Journey record is not found, return a 404 Not Found response
+        if (!$journey) return response()->noContent(Response::HTTP_NOT_FOUND);     
        
-       // Check if the journey has been marked as dropped off by looking for a related Dropoff record
-       $dropoffExists = Dropoff::where('journey_id', $journeyId)->exists();
+        // Check if the journey has been marked as dropped off by looking for a related Dropoff record
+        $dropoffExists = Dropoff::where('journey_id', $journeyId)->exists();
 
-       // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
-       if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);  
+        // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
+        if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);  
 
-       // Check if the journey has an associated car by looking at the car_id field
-       if ($journey->car_id) {
+        // Check if the journey has an associated car by looking at the car_id field
+        if ($journey->car_id) {
            // Attempt to find the Car record with the associated car ID
            $car = Car::find($journey->car_id);
 
-           // If the Car is found, return a 200 OK response with the car details (ID and seats)
-           if ($car) {
+            // If the Car is found, return a 200 OK response with the car details (ID and seats)
+            if ($car) {
                return response()->json([
                    'id' => $car->id,
                    'seats' => $car->seats,
                ], Response::HTTP_OK);
-           } else {
-                // If the Car record is not found, return a 404 Not Found response
-                return response()->noContent(Response::HTTP_NOT_FOUND);
-            }
-       }
+            } 
+        } 
 
-       // If the journey has no car assigned or no car was found, return a 204
-       return response()->noContent();
+        // If the journey has no car assigned or no car was found, return a 204
+        return response()->noContent();
     }
 }

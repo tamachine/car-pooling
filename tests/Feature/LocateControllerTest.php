@@ -86,17 +86,4 @@ class LocateControllerTest extends TestCase
     {
         return $this->assertInvalidContentTypeRejected();
     }
-
-    #[Test]
-    public function locate_journey_with_non_existing_car()
-    {
-        // Create a journey with an associated but non-existing car_id
-        $journey = Journey::factory()->create(['car_id' => 999]);
-
-        // Make a request to the locate endpoint
-        $response = $this->post('/locate', ['ID' => $journey->id]);
-
-        // Assert that the response status is 404 Not Found
-        $response->assertStatus(Response::HTTP_NOT_FOUND);
-    }
 }
