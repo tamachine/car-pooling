@@ -56,10 +56,8 @@ class CarController extends Controller
             Car::create($item);            
         }
         
-        // Return a 200 OK response indicating successful registration
-        return response()->json([
-            'message' => 'Cars list registered correctly'
-        ], Response::HTTP_OK);
+        // Return a 200 OK response 
+        return response()->noContent(Response::HTTP_OK); 
     }
 
     /**

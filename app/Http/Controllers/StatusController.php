@@ -16,7 +16,7 @@ class StatusController extends Controller
      */
     public function index()
     {                         
-        // Return a JSON response with a status message and HTTP 200 OK status
-        return response()->json(['status' => 'Service is up and running'], Response::HTTP_OK);
+        // Return a 200 OK response 
+        return response()->noContent(Response::HTTP_OK); 
     }
 }
