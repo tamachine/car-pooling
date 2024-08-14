@@ -52,15 +52,15 @@ class LocateController extends Controller
 
         // Check if the journey has an associated car by looking at the car_id field
         if ($journey->car_id) {
-           // Attempt to find the Car record with the associated car ID
-           $car = Car::find($journey->car_id);
+            // Attempt to find the Car record with the associated car ID
+            $car = Car::find($journey->car_id);
 
             // If the Car is found, return a 200 OK response with the car details (ID and seats)
             if ($car) {
-               return response()->json([
+                return response()->json([
                    'id' => $car->id,
                    'seats' => $car->seats,
-               ], Response::HTTP_OK);
+                ], Response::HTTP_OK);
             } 
         } 
 

@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Response;
-use App\Models\Journey;
-use App\Models\Car;
-use App\Models\Dropoff;
 
 class StatusController extends Controller
 {

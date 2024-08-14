@@ -88,8 +88,8 @@ class AssignCarToJourney implements ShouldQueue
             // Log the error for debugging purposes
             Log::error("Error assigning car to journey: " . $e->getMessage());
             
-            // Release the job back to the queue with a delay of 30 seconds to retry
-            $this->release(30);
+            // Release the job back to the queue with a delay of 10 seconds to retry
+            $this->release(10);
         }                    
                      
     }
