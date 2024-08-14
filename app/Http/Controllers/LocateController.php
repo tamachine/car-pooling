@@ -29,34 +29,28 @@ class LocateController extends Controller
 
        // Validate the request data to ensure 'ID' is present and is an integer
        $validator = \Validator::make($data, [
-           'id' => 'required|integer',
+           'ID' => 'required|integer',
        ]);
 
        // If validation fails, return a 400 Bad Request response with an error message
-       if ($validator->fails()) {
-           return response()->json([
-               'error' => 'Invalid data format: ' . $validator->errors()->first()
-           ], Response::HTTP_BAD_REQUEST);
-       }
+       if ($validator->fails()) return response()->noContent(Response::HTTP_BAD_REQUEST); 
 
        // Retrieve the journey ID from the validated data
-       $journeyId = $data['id'];
+       $journeyId = $data['ID'];
 
        // Attempt to find the Journey record with the provided ID
        $journey = Journey::find($journeyId);
 
        // If the Journey record is not found, return a 404 Not Found response
        if (!$journey) {
-           return response()->json(['error' => 'Group not found'], Response::HTTP_NOT_FOUND);
+           return response()->noContent(Response::HTTP_NOT_FOUND);           
        }
 
        // Check if the journey has been marked as dropped off by looking for a related Dropoff record
        $dropoffExists = Dropoff::where('journey_id', $journeyId)->exists();
 
        // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
-       if ($dropoffExists) {
-           return response()->json(['error' => 'Group not found'], Response::HTTP_NOT_FOUND);
-       }
+       if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);           
 
        // Check if the journey has an associated car by looking at the car_id field
        if ($journey->car_id) {
