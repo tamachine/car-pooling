@@ -60,7 +60,7 @@ class LocateController extends Controller
             } 
         } 
 
-        return response()->noContent(Response::HTTP_NOT_FOUND);
+        return response()->noContent(Response::HTTP_NO_CONTENT);
     }
 
     /**
