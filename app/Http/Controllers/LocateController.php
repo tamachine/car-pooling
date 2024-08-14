@@ -47,12 +47,12 @@ class LocateController extends Controller
      */
     protected function assignCar()
     {
-        if ($this->journey->car_id) {
+        if ($this->journey->car_id !== null) {
             // Attempt to find the Car record with the associated car ID
             $car = Car::find($this->journey->car_id);
 
             // If the Car is found, return a 200 OK response with the car details (ID and seats)
-            if ($car) {
+            if ($car !== null ) {
                 return response()->json([
                    'id' => $car->id,
                    'seats' => $car->seats,
