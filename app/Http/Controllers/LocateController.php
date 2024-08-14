@@ -12,48 +12,46 @@ class LocateController extends Controller
 {
     /**
      * Handle the locate request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * 
+     * This method processes the incoming request to locate a journey and possibly assign a car to it.
+     * 
+     * @param \Illuminate\Http\Request $request The incoming request instance.
+     * @return \Illuminate\Http\Response The response indicating success or failure.
      */
     public function locate(Request $request)
-    {              
-        // Call the verifyContentType method and return if there's an error
+    {                      
         $response = $this->verifyContentType($request, self::CONTENT_TYPE_APPLICATION_FORM);
-        if ($response) {
-            return $response;
-        }
-         
-        // Retrieve and decode the incoming JSON data from the request
-        $data = $request->all();
+        if ($response) return $response;
+                 
+        $this->setData($request->all());
 
-        // Validate the request data to ensure 'ID' is present and is an integer
-        $validator = \Validator::make($data, [
-           'ID' => 'required|integer',
-        ]);
+        $validator = $this->validateData();
+        if ($validator) return $validator;
+        
+        $this->setJourney($this->data['ID']);
 
-        // If validation fails, return a 400 Bad Request response with an error message
-        if ($validator->fails()) return response()->noContent(Response::HTTP_BAD_REQUEST); 
-
-        // Retrieve the journey ID from the validated data
-        $journeyId = $data['ID'];
-
-        // Attempt to find the Journey record with the provided ID
-        $journey = Journey::find($journeyId);
-
-        // If the Journey record is not found, return a 404 Not Found response
-        if (!$journey) return response()->noContent(Response::HTTP_NOT_FOUND);     
+        $validateJourney = $this->validateJourney();
+        if ($validateJourney) return $validateJourney;      
        
-        // Check if the journey has been marked as dropped off by looking for a related Dropoff record
-        $dropoffExists = Dropoff::where('journey_id', $journeyId)->exists();
+        $validateDropoff = $this->validateDropoff();
+        if ($validateDropoff) return $validateDropoff;    
+        
+        $assignCar = $this->assignCar();
+        if ($assignCar) return $assignCar; 
+        
+        return response()->noContent();
+    }
 
-        // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
-        if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);  
-
-        // Check if the journey has an associated car by looking at the car_id field
-        if ($journey->car_id) {
+    /**
+     * Attempt to assign a car to the journey and return car details if found.
+     * 
+     * @return \Illuminate\Http\Response|null The response with car details or null if no car is assigned.
+     */
+    protected function assignCar()
+    {
+        if ($this->journey->car_id) {
             // Attempt to find the Car record with the associated car ID
-            $car = Car::find($journey->car_id);
+            $car = Car::find($this->journey->car_id);
 
             // If the Car is found, return a 200 OK response with the car details (ID and seats)
             if ($car) {
@@ -64,7 +62,43 @@ class LocateController extends Controller
             } 
         } 
 
-        // If the journey has no car assigned or no car was found, return a 204
-        return response()->noContent();
+        return null;
+    }
+
+    /**
+     * Validate that the journey exists.
+     * 
+     * @return \Illuminate\Http\Response|null The response indicating the journey was not found, or null if found.
+     */
+    protected function validateJourney()
+    {        
+        if (!$this->journey) return response()->noContent(Response::HTTP_NOT_FOUND);   
+
+        return null;
+    }
+
+    /**
+     * Validate that the journey has not been dropped off already.
+     * 
+     * @return \Illuminate\Http\Response|null The response indicating the dropoff status, or null if not dropped off.
+     */
+    protected function validateDropoff()
+    {        
+        $dropoffExists = Dropoff::where('journey_id', $this->journey->id)->exists();
+
+        // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
+        if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);     
+
+        return null;
+    }
+
+    /**
+     * Define validation rules for the incoming request data.
+     * 
+     * @return array An array of validation rules for the 'ID' field.
+     */
+    protected function validationRules()
+    {
+        return ['ID' => 'required|integer'];
     }
 }
