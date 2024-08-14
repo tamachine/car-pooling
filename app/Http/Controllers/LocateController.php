@@ -42,15 +42,7 @@ class LocateController extends Controller
        $journey = Journey::find($journeyId);
 
        // If the Journey record is not found, return a 404 Not Found response
-       if (!$journey) {
-           return response()->noContent(Response::HTTP_NOT_FOUND);           
-       }
-
-       // Check if the journey has been marked as dropped off by looking for a related Dropoff record
-       $dropoffExists = Dropoff::where('journey_id', $journeyId)->exists();
-
-       // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
-       if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);           
+       if (!$journey) return response()->noContent(Response::HTTP_NOT_FOUND);                       
 
        // Check if the journey has an associated car by looking at the car_id field
        if ($journey->car_id) {
@@ -66,7 +58,7 @@ class LocateController extends Controller
            }
        }
 
-       // If the journey has no car assigned or no car was found, return a 204 No Content response
+       // If the journey has no car assigned or no car was found, return a 200
        return response()->noContent();
     }
 }
