@@ -12,13 +12,13 @@ build_image:
   services:
     - docker:dind
   script:    
+    - echo "Logging in to Docker registry..."
+    - echo ${CI_JOB_TOKEN} | docker login --password-stdin -u ${CI_REGISTRY_USER} ${CI_REGISTRY}
     - echo "Building docker image..."
     - docker build . -t ${CI_REGISTRY_IMAGE}:latest
-    - echo "Logging in to Docker registry..."
-    - echo ${DOCKER_IO_REGISTRY_PASSWORD} | docker login -u ${DOCKER_IO_REGISTRY_USER} --password-stdin ${DOCKER_IO_REGISTRY}
     - echo "Pushing docker image to registry..."
     - docker push ${CI_REGISTRY_IMAGE}:latest
-    
+
 acceptance:
   image: cabify/challenge:latest
   stage: acceptance
