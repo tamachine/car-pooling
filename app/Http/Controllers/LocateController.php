@@ -55,10 +55,13 @@ class LocateController extends Controller
                    'id' => $car->id,
                    'seats' => $car->seats,
                ], Response::HTTP_OK);
-           }
+           } else {
+                // If the Car record is not found, return a 404 Not Found response
+                return response()->noContent(Response::HTTP_NOT_FOUND);
+            }
        }
 
-       // If the journey has no car assigned or no car was found, return a 200
+       // If the journey has no car assigned or no car was found, return a 204
        return response()->noContent();
     }
 }
