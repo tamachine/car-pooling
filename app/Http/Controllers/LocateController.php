@@ -19,17 +19,17 @@ class LocateController extends Controller
     public function locate(Request $request)
     {              
         // Call the verifyContentType method and return if there's an error
-        $response = $this->verifyContentType($request);
+        $response = $this->verifyContentType($request, self::CONTENT_TYPE_APPLICATION_FORM);
         if ($response) {
             return $response;
         }
          
        // Retrieve and decode the incoming JSON data from the request
-       $data = $request->json()->all();
+       $data = $request->all();
 
        // Validate the request data to ensure 'ID' is present and is an integer
        $validator = \Validator::make($data, [
-           'ID' => 'required|integer',
+           'id' => 'required|integer',
        ]);
 
        // If validation fails, return a 400 Bad Request response with an error message
@@ -40,7 +40,7 @@ class LocateController extends Controller
        }
 
        // Retrieve the journey ID from the validated data
-       $journeyId = $data['ID'];
+       $journeyId = $data['id'];
 
        // Attempt to find the Journey record with the provided ID
        $journey = Journey::find($journeyId);
