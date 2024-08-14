@@ -37,7 +37,6 @@ class LocateController extends Controller
         if ($validateDropoff) return $validateDropoff;    
         
         return $this->assignCar();
-        
     }
 
     /**
@@ -47,12 +46,12 @@ class LocateController extends Controller
      */
     protected function assignCar()
     {
-        if ($this->journey->car_id !== null) {
+        if ($this->journey->car_id) {
             // Attempt to find the Car record with the associated car ID
             $car = Car::find($this->journey->car_id);
 
             // If the Car is found, return a 200 OK response with the car details (ID and seats)
-            if ($car !== null ) {
+            if ($car) {
                 return response()->json([
                    'id' => $car->id,
                    'seats' => $car->seats,
