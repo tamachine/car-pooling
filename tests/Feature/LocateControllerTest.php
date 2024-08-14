@@ -68,8 +68,35 @@ class LocateControllerTest extends TestCase
     }
 
     #[Test]
+    public function locate_journey_with_dropoff()
+    {
+        // Create a journey and mark it as dropoff
+        $journey = Journey::factory()->create();
+        Dropoff::factory()->create(['journey_id' => $journey->id]);
+
+        // Make a request to the locate endpoint
+        $response = $this->post('/locate', ['ID' => $journey->id]);
+
+        // Assert that the response status is 404 Not Found
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    #[Test]
     public function rejects_invalid_content_type_cars_request() 
     {
         return $this->assertInvalidContentTypeRejected();
+    }
+
+    #[Test]
+    public function locate_journey_with_non_existing_car()
+    {
+        // Create a journey with an associated but non-existing car_id
+        $journey = Journey::factory()->create(['car_id' => 999]);
+
+        // Make a request to the locate endpoint
+        $response = $this->post('/locate', ['ID' => $journey->id]);
+
+        // Assert that the response status is 404 Not Found
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }
