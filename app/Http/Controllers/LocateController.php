@@ -71,9 +71,9 @@ class LocateController extends Controller
      * @return \Illuminate\Http\Response|null The response indicating the journey was not found, or null if found.
      */
     protected function validateJourney()
-    {        
-        if (!$this->journey) return response()->noContent(Response::HTTP_NOT_FOUND);   
-
+    {                
+        if (!$this->journey) return response()->json(['error' => 'Group not found'], Response::HTTP_NOT_FOUND);
+  
         return null;
     }
 
@@ -87,7 +87,7 @@ class LocateController extends Controller
         $dropoffExists = Dropoff::where('journey_id', $this->journey->id)->exists();
 
         // If a Dropoff record exists, return a 404 Not Found response indicating the group was dropped off
-        if ($dropoffExists)  return response()->noContent(Response::HTTP_NOT_FOUND);     
+        if ($dropoffExists) return response()->json(['error' => 'Group has been dropped off'], Response::HTTP_NOT_FOUND);
 
         return null;
     }
