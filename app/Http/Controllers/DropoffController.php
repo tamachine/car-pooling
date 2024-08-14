@@ -28,7 +28,7 @@ class DropoffController extends Controller
 
         // Validate the request data to ensure 'ID' is present and is an integer
         $validator = \Validator::make($data, [
-            'id' => 'required|integer',
+            'ID' => 'required|integer',
         ]);
 
         // If validation fails, return a 400 Bad Request response with an error message
@@ -39,7 +39,7 @@ class DropoffController extends Controller
         }        
 
         // Retrieve the journey ID from the validated data
-        $journeyId = $data['id'];
+        $journeyId = $data['ID'];
 
         // Attempt to find the Journey record with the provided ID
         $journey = Journey::find($journeyId);

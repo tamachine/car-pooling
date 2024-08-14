@@ -21,7 +21,7 @@ class DropoffControllerTest extends TestCase
 
         // Send a POST request to the store method
         $response = $this->post('/dropoff', [
-            'id' => $journey->id,
+            'ID' => $journey->id,
         ]);
 
         // Assert the response status is 204 No Content
@@ -43,7 +43,7 @@ class DropoffControllerTest extends TestCase
     {
         // Send a POST request to the store method with invalid data       
         $response = $this->post('/dropoff', [
-            'id' => 'invalid_id',
+            'ID' => 'invalid_id',
         ]);
 
         // Assert the response status is 400 Bad Request
@@ -60,7 +60,7 @@ class DropoffControllerTest extends TestCase
     {
         // Send a POST request to the store method with a non-existent journey ID
         $response = $this->post('/dropoff', [
-            'id' => 9999, // Assuming this id does not exist
+            'ID' => 9999, // Assuming this id does not exist
         ]);
 
         // Assert the response status is 404 Not Found
