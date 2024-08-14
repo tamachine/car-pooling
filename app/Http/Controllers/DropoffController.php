@@ -18,13 +18,13 @@ class DropoffController extends Controller
     public function store(Request $request)
     {
          // Call the verifyContentType method and return if there's an error
-         $response = $this->verifyContentType($request);
+         $response = $this->verifyContentType($request, self::CONTENT_TYPE_APPLICATION_FORM);
          if ($response) {
              return $response;
          }
          
         // Retrieve and decode the incoming JSON data from the request
-        $data = $request->json()->all();
+        $data = $request->all();
 
         // Validate the request data to ensure 'ID' is present and is an integer
         $validator = \Validator::make($data, [
