@@ -8,11 +8,12 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     git \
+    supervisor \
     && docker-php-ext-configure gd \
     && docker-php-ext-install gd pdo pdo_sqlite zip \
     && a2enmod rewrite \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*    
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -29,10 +30,11 @@ RUN composer install
 
 RUN php artisan migrate
 
-RUN vendor/bin/phpunit --configuration /var/www/html/phpunit.xml
+COPY ./supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 
 RUN echo "Listen 9091" >> /etc/apache2/ports.conf
 
 EXPOSE 9091
 
-CMD ["sh", "-c", "php /var/www/html/artisan queue:work --sleep=3 --tries=3 & apache2-foreground"]
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
