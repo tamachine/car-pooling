@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Journey;
 use App\Models\Car;
 use App\Models\Dropoff;
 
 class LocateController extends Controller
 {
+
+    protected $car;
+
     /**
      * Handle the locate request.
      * 
@@ -26,40 +28,35 @@ class LocateController extends Controller
         $this->setData($request->all());
 
         $validator = $this->validateData();
-        if ($validator) return $validator;
-        
-        $this->setJourney($this->data['ID']);
+        if ($validator) return $validator;        
 
         $validateJourney = $this->validateJourney();
-        if ($validateJourney) return $validateJourney;      
-       
-        $validateDropoff = $this->validateDropoff();
-        if ($validateDropoff) return $validateDropoff;    
+        if ($validateJourney) return $validateJourney;   
         
-        return $this->assignCar();
+        $validateDropoff = $this->validateDropoff();
+        if ($validateDropoff) return $validateDropoff;   
+       
+        $validateCar = $this->validateCar();
+        if ($validateCar) return $validateCar;    
+        
+        return response()->json([
+            'id'    => $this->car->id,
+            'seats' => $this->car->seats,
+         ], Response::HTTP_OK);
     }
 
-    /**
-     * Attempt to assign a car to the journey and return car details if found.
+      /**
+     * Validate that the journey exists.
      * 
-     * @return \Illuminate\Http\Response|null The response with car details or null if no car is assigned.
+     * @return \Illuminate\Http\Response|null The response indicating the journey was not found, or null if found.
      */
-    protected function assignCar()
-    {
-        if ($this->journey->car_id) {
-            // Attempt to find the Car record with the associated car ID
-            $car = Car::find($this->journey->car_id);
+    protected function validateCar()
+    {                      
+        $this->setCar($this->journey->car_id);
 
-            // If the Car is found, return a 200 OK response with the car details (ID and seats)
-            if ($car) {
-                return response()->json([
-                   'id' => $car->id,
-                   'seats' => $car->seats,
-                ], Response::HTTP_OK);
-            } 
-        } 
-
-        return response()->noContent(Response::HTTP_NO_CONTENT);
+        if(!$this->car) return response()->noContent(Response::HTTP_NO_CONTENT);        
+          
+        return null;
     }
 
     /**
@@ -69,6 +66,8 @@ class LocateController extends Controller
      */
     protected function validateJourney()
     {        
+        $this->setJourney($this->data['ID']);
+
         if (!$this->journey) return response()->noContent(Response::HTTP_NOT_FOUND); 
           
         return null;
@@ -97,5 +96,15 @@ class LocateController extends Controller
     protected function validationRules()
     {
         return ['ID' => 'required|integer'];
+    }
+
+    /**
+     * Set the car property by finding the Car model using the provided ID.
+     * 
+     * @param int $carId The ID of the car to be set.
+     */
+    public function setCar($carId)
+    {
+        $this->car = Car::find($carId);
     }
 }
